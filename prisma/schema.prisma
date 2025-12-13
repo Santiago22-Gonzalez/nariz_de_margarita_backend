@@ -13,7 +13,7 @@ model Usuario {
   apellidos         String
   fechaNacimiento   DateTime
   lugarNacimiento   String
-  telefono          Int
+  telefono          String
   correo            String          @unique
   contraseña        String
   createdAt         DateTime        @default(now())

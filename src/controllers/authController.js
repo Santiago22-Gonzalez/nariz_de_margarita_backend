@@ -11,6 +11,7 @@ exports.registro = async (req, res) => {
       lugarNacimiento,
       correo,
       contraseña,
+      telefono,
     } = req.body;
 
     const usuarioExiste = await prisma.usuario.findUnique({
@@ -31,6 +32,7 @@ exports.registro = async (req, res) => {
         lugarNacimiento,
         correo,
         contraseña: contraseñaHash,
+        telefono,
       },
     });
 
