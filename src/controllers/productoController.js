@@ -3,7 +3,8 @@ const path = require("path");
 
 exports.crearProducto = async (req, res) => {
   try {
-    const { nombre, precio, descuento, tipo, cantidad } = req.body;
+    const { nombre, precio, descuento, tipo, cantidad, calificacion } =
+      req.body;
 
     if (!req.file) {
       return res.status(400).json({ error: "La imagen es requerida" });
@@ -19,6 +20,7 @@ exports.crearProducto = async (req, res) => {
         descuento: descuento ? parseFloat(descuento) : 0,
         tipo,
         cantidad: parseInt(cantidad),
+        calificacion: parseInt(calificacion),
       },
     });
 
