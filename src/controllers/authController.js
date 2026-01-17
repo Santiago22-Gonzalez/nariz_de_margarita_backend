@@ -3,10 +3,11 @@ const jwt = require("jsonwebtoken");
 const prisma = require("../models/db");
 
 exports.registro = async (req, res) => {
+  console.log(req.body);
   try {
     const {
       nombres,
-      apellidos,
+      experiencia,
       fechaNacimiento,
       lugarNacimiento,
       correo,
@@ -27,7 +28,7 @@ exports.registro = async (req, res) => {
     const nuevoUsuario = await prisma.usuario.create({
       data: {
         nombres,
-        apellidos,
+        experiencia,
         fechaNacimiento: new Date(fechaNacimiento),
         lugarNacimiento,
         correo,

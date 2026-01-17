@@ -7,39 +7,42 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id                Int             @id @default(autoincrement())
-  nombres           String
-  apellidos         String
-  fechaNacimiento   DateTime
-  lugarNacimiento   String
-  telefono          String
-  correo            String          @unique
-  contraseña        String
-  createdAt         DateTime        @default(now())
-  compras           UsuarioCompra[]
+model producto {
+  id            Int             @id @default(autoincrement())
+  nombre        String
+  imagen        String
+  precio        Float
+  descuento     Float           @default(0)
+  tipo          String
+  cantidad      Int
+  calificacion  Int             @default(0)
+  fechaCreacion DateTime        @default(now())
+  usuariocompra usuariocompra[]
 }
 
-model Producto {
+model usuario {
   id              Int             @id @default(autoincrement())
-  nombre          String
-  imagen          String
-  precio          Float
-  descuento       Float           @default(0)
-  tipo            String
-  cantidad        Int
-  calificacion    Int           @default(0)
-  fechaCreacion   DateTime        @default(now())
-  compras         UsuarioCompra[]
+  nombres         String
+  fechaNacimiento DateTime
+  lugarNacimiento String
+  telefono        String
+  correo          String          @unique(map: "Usuario_correo_key")
+  contrase_a      String          @map("contraseña")
+  createdAt       DateTime        @default(now())
+  experiencia     String
+  usuariocompra   usuariocompra[]
 }
 
-model UsuarioCompra {
+model usuariocompra {
   id          Int      @id @default(autoincrement())
   usuarioId   Int
   productoId  Int
   cantidad    Int
   precioTotal Float
   fechaCompra DateTime @default(now())
-  usuario     Usuario  @relation(fields: [usuarioId], references: [id])
-  producto    Producto @relation(fields: [productoId], references: [id])
+  producto    producto @relation(fields: [productoId], references: [id], map: "UsuarioCompra_productoId_fkey")
+  usuario     usuario  @relation(fields: [usuarioId], references: [id], map: "UsuarioCompra_usuarioId_fkey")
+
+  @@index([productoId], map: "UsuarioCompra_productoId_fkey")
+  @@index([usuarioId], map: "UsuarioCompra_usuarioId_fkey")
 }
