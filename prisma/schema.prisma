@@ -27,7 +27,7 @@ model usuario {
   lugarNacimiento String
   telefono        String
   correo          String          @unique(map: "Usuario_correo_key")
-  contrase_a      String          @map("contraseña")
+  contrasena      String  
   createdAt       DateTime        @default(now())
   experiencia     String
   usuariocompra   usuariocompra[]

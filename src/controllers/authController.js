@@ -11,7 +11,7 @@ exports.registro = async (req, res) => {
       fechaNacimiento,
       lugarNacimiento,
       correo,
-      contraseña,
+      contrasena,
       telefono,
     } = req.body;
 
@@ -23,7 +23,7 @@ exports.registro = async (req, res) => {
       return res.status(400).json({ error: "El correo ya está registrado" });
     }
 
-    const contraseñaHash = await bcrypt.hash(contraseña, 10);
+    const contrasenaHash = await bcrypt.hash(contrasena, 10);
 
     const nuevoUsuario = await prisma.usuario.create({
       data: {
@@ -32,21 +32,22 @@ exports.registro = async (req, res) => {
         fechaNacimiento: new Date(fechaNacimiento),
         lugarNacimiento,
         correo,
-        contraseña: contraseñaHash,
+        contrasena: contrasenaHash,
         telefono,
       },
     });
 
-    const { contraseña: _, ...usuarioSinContraseña } = nuevoUsuario;
-    res.status(201).json(usuarioSinContraseña);
+    const { contrasena: _, ...usuarioSinContrasena } = nuevoUsuario;
+    res.status(201).json(usuarioSinContrasena);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: "Error al registrar usuario" });
   }
 };
 
 exports.login = async (req, res) => {
   try {
-    const { correo, contraseña } = req.body;
+    const { correo, contrasena } = req.body;
 
     const usuario = await prisma.usuario.findUnique({
       where: { correo },
@@ -56,12 +57,12 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: "Credenciales inválidas" });
     }
 
-    const contraseñaValida = await bcrypt.compare(
-      contraseña,
-      usuario.contraseña
+    const contrasenaValida = await bcrypt.compare(
+      contrasena,
+      usuario.contrasena
     );
 
-    if (!contraseñaValida) {
+    if (!contrasenaValida) {
       return res.status(401).json({ error: "Credenciales inválidas" });
     }
 
@@ -71,8 +72,8 @@ exports.login = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    const { contraseña: _, ...usuarioSinContraseña } = usuario;
-    res.json({ token, usuario: usuarioSinContraseña });
+    const { contrasena: _, ...usuarioSinContrasena } = usuario;
+    res.json({ token, usuario: usuarioSinContrasena });
   } catch (error) {
     res.status(500).json({ error: "Error al iniciar sesión" });
   }
